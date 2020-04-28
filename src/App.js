@@ -1,25 +1,17 @@
 import React from "react";
-import D3 from "d3";
+import BarChart from "./BarChart";
 import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="App-header">
+        <h1>COVID-19 Tracker</h1>
+      </div>
+      <div>
+        <BarChart data={[5, 10, 1, 3]} size={[500, 500]} />
+      </div>
     </div>
   );
 }
