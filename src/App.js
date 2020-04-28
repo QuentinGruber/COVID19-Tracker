@@ -1,5 +1,5 @@
 import React from "react";
-import BarChart from "./BarChart";
+import BarChart from "./components/BarChart";
 import logo from "./logo.svg";
 import "./App.css";
 
