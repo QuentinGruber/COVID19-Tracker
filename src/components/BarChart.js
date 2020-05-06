@@ -14,7 +14,7 @@ export default class LineGraph extends Component {
         labels: ["France", "Worldwide"],
         datasets: [
           {
-            label: "Coronavirus Cases",
+            label: this.props.datalabel,
             data: this.props.data,
           },
         ],
