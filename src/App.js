@@ -1,23 +1,25 @@
 import React from "react";
 import BarChart from "./components/BarChart";
 import "./App.css";
-
+import jsonQuery from "json-query";
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.covid_data = null;
     this.NbCaseFR = null;
     this.TotalNbCaseFR = null;
     this.NbCaseALL = null;
     this.TotalNbCaseALL = null;
     this.GetCases = this.GetCases.bind(this);
     this.GetDeath = this.GetDeath.bind(this);
+    this.GetFRCasesFrom = this.GetFRCasesFrom.bind(this);
   }
 
-  GetCases(covid_data, jsonQuery) {
+  GetFRCasesFrom(BeginDate, EndDate) {
     this.NbCaseFR = jsonQuery(
       "records[*countriesAndTerritories=France].cases",
       {
-        data: covid_data,
+        data: this.covid_data,
       }
     );
     console.log(this.NbCaseFR);
@@ -28,7 +30,7 @@ class App extends React.Component {
     console.log(this.TotalNbCaseFR);
 
     this.NbCaseALL = jsonQuery("records[*].cases", {
-      data: covid_data,
+      data: this.covid_data,
     });
     console.log(this.NbCaseALL);
     this.TotalNbCaseALL = 0;
@@ -38,11 +40,36 @@ class App extends React.Component {
     console.log(this.TotalNbCaseALL);
   }
 
-  GetDeath(covid_data, jsonQuery) {
+  GetCases() {
+    this.NbCaseFR = jsonQuery(
+      "records[*countriesAndTerritories=France].cases",
+      {
+        data: this.covid_data,
+      }
+    );
+    console.log(this.NbCaseFR);
+    this.TotalNbCaseFR = 0;
+    for (let i = 0; i < this.NbCaseFR.value.length; i++) {
+      this.TotalNbCaseFR += parseInt(this.NbCaseFR.value[i]);
+    }
+    console.log(this.TotalNbCaseFR);
+
+    this.NbCaseALL = jsonQuery("records[*].cases", {
+      data: this.covid_data,
+    });
+    console.log(this.NbCaseALL);
+    this.TotalNbCaseALL = 0;
+    for (let i = 0; i < this.NbCaseALL.value.length; i++) {
+      this.TotalNbCaseALL += parseInt(this.NbCaseALL.value[i]);
+    }
+    console.log(this.TotalNbCaseALL);
+  }
+
+  GetDeath() {
     this.NbDeathFR = jsonQuery(
       "records[*countriesAndTerritories=France].deaths",
       {
-        data: covid_data,
+        data: this.covid_data,
       }
     );
     console.log(this.NbDeathFR);
@@ -53,7 +80,7 @@ class App extends React.Component {
     console.log(this.TotalNbDeathFR);
 
     this.NbDeathALL = jsonQuery("records[*].deaths", {
-      data: covid_data,
+      data: this.covid_data,
     });
     console.log(this.NbDeathALL);
     this.TotalNbDeathALL = 0;
@@ -63,11 +90,10 @@ class App extends React.Component {
     console.log(this.TotalNbDeathALL);
   }
   render() {
-    const covid_data = require("./Covid-19-json.json");
-    const jsonQuery = require("json-query");
+    this.covid_data = require("./Covid-19-json.json");
 
-    this.GetCases(covid_data, jsonQuery);
-    this.GetDeath(covid_data, jsonQuery);
+    this.GetCases();
+    this.GetDeath();
 
     return (
       <div className="App">
