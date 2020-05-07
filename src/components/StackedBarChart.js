@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Chart from "chart.js";
 
-export default class BarChart extends Component {
+export default class StackedBarchart extends Component {
   chartRef = React.createRef();
 
   componentDidMount() {
@@ -14,9 +14,20 @@ export default class BarChart extends Component {
         labels: ["France", "Worldwide"],
         datasets: [
           {
-            label: this.props.datalabel,
-            data: this.props.data,
-            backgroundColor: this.props.color,
+            label: "Cases",
+            data: [
+              this.props.data.TotalNbCaseFR,
+              this.props.data.TotalNbCaseALL,
+            ],
+            backgroundColor: this.props.color_cases,
+          },
+          {
+            label: "Deaths",
+            data: [
+              this.props.data.TotalNbDeathFR,
+              this.props.data.TotalNbDeathALL,
+            ],
+            backgroundColor: this.props.color_deaths,
           },
         ],
       },

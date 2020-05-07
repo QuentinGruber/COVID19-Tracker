@@ -1,5 +1,6 @@
 import React from "react";
 import BarChart from "./components/BarChart";
+import StackedBarchart from "./components/StackedBarChart";
 import "./App.css";
 import jsonQuery from "json-query";
 class App extends React.Component {
@@ -98,11 +99,13 @@ class App extends React.Component {
         <div className="App-header">
           <h1>COVID-19 Tracker</h1>
         </div>
+
         <div>
           <h2>Spread of COVID-19 on March 31, 2020</h2>
           <BarChart
             datalabel={"COVID-19 Cases"}
             data={[this.TotalNbCaseFR, this.TotalNbCaseALL]}
+            color={"#cb24f0"}
             size={[500, 500]}
           />
         </div>
@@ -111,6 +114,23 @@ class App extends React.Component {
           <BarChart
             datalabel={"Death from COVID-19"}
             data={[this.TotalNbDeathFR, this.TotalNbDeathALL]}
+            color={"#ff0000"}
+            size={[500, 500]}
+          />
+        </div>
+
+        <div>
+          <h2>Death & Cases of COVID-19 on March 31, 2020</h2>
+          <StackedBarchart
+            datalabel={"COVID-19 Cases"}
+            data={{
+              TotalNbCaseFR: this.TotalNbCaseFR,
+              TotalNbCaseALL: this.TotalNbCaseALL,
+              TotalNbDeathFR: this.TotalNbDeathFR,
+              TotalNbDeathALL: this.TotalNbDeathALL,
+            }}
+            color_cases={"#cb24f0"}
+            color_deaths={"#ff0000"}
             size={[500, 500]}
           />
         </div>
