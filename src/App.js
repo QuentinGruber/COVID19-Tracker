@@ -5,7 +5,7 @@ import jsonQuery from "json-query";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.covid_data = null;
+    this.covid_data = require("./data/Covid-19-json.json");
     this.NbCaseFR = null;
     this.TotalNbCaseFR = null;
     this.NbCaseALL = null;
@@ -90,8 +90,6 @@ class App extends React.Component {
     console.log(this.TotalNbDeathALL);
   }
   render() {
-    this.covid_data = require("./Covid-19-json.json");
-
     this.GetCases();
     this.GetDeath();
 
