@@ -3,6 +3,7 @@ import BarChart from "./components/BarChart";
 import StackedBarchart from "./components/StackedBarChart";
 import "./App.css";
 import jsonQuery from "json-query";
+import LineChart from "./components/LineChart";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -16,29 +17,23 @@ class App extends React.Component {
     this.GetFRCasesFrom = this.GetFRCasesFrom.bind(this);
   }
 
-  GetFRCasesFrom(BeginDate, EndDate) {
-    this.NbCaseFR = jsonQuery(
-      "records[*countriesAndTerritories=France].cases",
+  GetFRCasesFrom(Month, Year = 2020) {
+    var FRdataForMonth_unordonized = jsonQuery(
+      "records[*countriesAndTerritories=France & month= " +
+        Month +
+        " & year= " +
+        Year +
+        " ]",
       {
         data: this.covid_data,
       }
     );
-    console.log(this.NbCaseFR);
-    this.TotalNbCaseFR = 0;
-    for (let i = 0; i < this.NbCaseFR.value.length; i++) {
-      this.TotalNbCaseFR += parseInt(this.NbCaseFR.value[i]);
-    }
-    console.log(this.TotalNbCaseFR);
 
-    this.NbCaseALL = jsonQuery("records[*].cases", {
-      data: this.covid_data,
-    });
-    console.log(this.NbCaseALL);
-    this.TotalNbCaseALL = 0;
-    for (let i = 0; i < this.NbCaseALL.value.length; i++) {
-      this.TotalNbCaseALL += parseInt(this.NbCaseALL.value[i]);
+    var FRdataForMonth = [];
+    for (let i = 0; i < FRdataForMonth_unordonized.value.length; i++) {
+      FRdataForMonth.unshift(FRdataForMonth_unordonized.value[i]);
     }
-    console.log(this.TotalNbCaseALL);
+    return FRdataForMonth;
   }
 
   GetCases() {
@@ -48,22 +43,18 @@ class App extends React.Component {
         data: this.covid_data,
       }
     );
-    console.log(this.NbCaseFR);
     this.TotalNbCaseFR = 0;
     for (let i = 0; i < this.NbCaseFR.value.length; i++) {
       this.TotalNbCaseFR += parseInt(this.NbCaseFR.value[i]);
     }
-    console.log(this.TotalNbCaseFR);
 
     this.NbCaseALL = jsonQuery("records[*].cases", {
       data: this.covid_data,
     });
-    console.log(this.NbCaseALL);
     this.TotalNbCaseALL = 0;
     for (let i = 0; i < this.NbCaseALL.value.length; i++) {
       this.TotalNbCaseALL += parseInt(this.NbCaseALL.value[i]);
     }
-    console.log(this.TotalNbCaseALL);
   }
 
   GetDeath() {
@@ -73,31 +64,60 @@ class App extends React.Component {
         data: this.covid_data,
       }
     );
-    console.log(this.NbDeathFR);
     this.TotalNbDeathFR = 0;
     for (let i = 0; i < this.NbDeathFR.value.length; i++) {
       this.TotalNbDeathFR += parseInt(this.NbDeathFR.value[i]);
     }
-    console.log(this.TotalNbDeathFR);
 
     this.NbDeathALL = jsonQuery("records[*].deaths", {
       data: this.covid_data,
     });
-    console.log(this.NbDeathALL);
     this.TotalNbDeathALL = 0;
     for (let i = 0; i < this.NbDeathALL.value.length; i++) {
       this.TotalNbDeathALL += parseInt(this.NbDeathALL.value[i]);
     }
-    console.log(this.TotalNbDeathALL);
   }
   render() {
     this.GetCases();
     this.GetDeath();
+    var Jan_data = this.GetFRCasesFrom(1);
+    var jan_data_date = [];
+    var jan_data_cases = [];
+    for (let i = 0; i < Jan_data.length; i++) {
+      jan_data_date.push(Jan_data[i].dateRep);
+      jan_data_cases.push(Jan_data[i].cases);
+    }
+    var Feb_data = this.GetFRCasesFrom(2);
+    var Feb_data_date = [];
+    var Feb_data_cases = [];
 
+    for (let i = 0; i < Feb_data.length; i++) {
+      Feb_data_date.push(Feb_data[i].dateRep);
+      Feb_data_cases.push(Feb_data[i].cases);
+    }
+    var Mar_data = this.GetFRCasesFrom(3);
+    var Mar_data_date = [];
+    var Mardata_cases = [];
+
+    for (let i = 0; i < Mar_data.length; i++) {
+      Mar_data_date.push(Mar_data[i].dateRep);
+      Mardata_cases.push(Mar_data[i].cases);
+    }
     return (
       <div className="App">
         <div className="App-header">
           <h1>COVID-19 Tracker</h1>
+        </div>
+
+        <div>
+          <h2>Case of COVID-19 in France between 1/1/2020 and 31/3/2020</h2>
+          <LineChart
+            datalabel={"COVID-19 Cases"}
+            data_date={jan_data_date.concat(Feb_data_date)}
+            data={jan_data_cases.concat(Feb_data_cases)}
+            color_cases={"#cb24f0"}
+            size={[500, 500]}
+          />
         </div>
 
         <div>
@@ -109,6 +129,7 @@ class App extends React.Component {
             size={[500, 500]}
           />
         </div>
+
         <div>
           <h2>Death due to COVID-19 on March 31, 2020</h2>
           <BarChart
