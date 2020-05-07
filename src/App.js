@@ -8,18 +8,52 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.covid_data = require("./data/Covid-19-json.json");
-    this.NbCaseFR = null;
-    this.TotalNbCaseFR = null;
-    this.NbCaseALL = null;
-    this.TotalNbCaseALL = null;
     this.GetCases = this.GetCases.bind(this);
     this.GetDeath = this.GetDeath.bind(this);
-    this.GetFRCasesFrom = this.GetFRCasesFrom.bind(this);
+    this.GetDeathsBetweenDates = this.GetDeathsBetweenDates.bind(this);
+    this.GetDateRepBetweenDates = this.GetDateRepBetweenDates.bind(this);
+    this.GetCasesBetweenDates = this.GetCasesBetweenDates.bind(this);
+    this.GetCasesFrom = this.GetCasesFrom.bind(this);
   }
 
-  GetFRCasesFrom(Month, Year = 2020) {
-    var FRdataForMonth_unordonized = jsonQuery(
-      "records[*countriesAndTerritories=France & month= " +
+  GetDateRepBetweenDates(Country, Month1, Month2) {
+    let DateRep = [];
+    for (let j = 0; j <= Month2 - Month1; j++) {
+      let month_data = this.GetCasesFrom(Country, Month1 + j);
+      for (let i = 0; i < month_data.length; i++) {
+        DateRep.push(month_data[i].dateRep);
+      }
+    }
+    return DateRep;
+  }
+
+  GetCasesBetweenDates(Country, Month1, Month2) {
+    let Cases = [];
+    for (let j = 0; j <= Month2 - Month1; j++) {
+      let month_data = this.GetCasesFrom(Country, Month1 + j);
+      for (let i = 0; i < month_data.length; i++) {
+        Cases.push(month_data[i].cases);
+      }
+    }
+    return Cases;
+  }
+
+  GetDeathsBetweenDates(Country, Month1, Month2) {
+    let Deaths = [];
+    for (let j = 0; j <= Month2 - Month1; j++) {
+      let month_data = this.GetCasesFrom(Country, Month1 + j);
+      for (let i = 0; i < month_data.length; i++) {
+        Deaths.push(month_data[i].deaths);
+      }
+    }
+    return Deaths;
+  }
+
+  GetCasesFrom(Country, Month, Year = 2020) {
+    var dataForMonth_unordonized = jsonQuery(
+      "records[*countriesAndTerritories=" +
+        Country +
+        " & month= " +
         Month +
         " & year= " +
         Year +
@@ -29,80 +63,55 @@ class App extends React.Component {
       }
     );
 
-    var FRdataForMonth = [];
-    for (let i = 0; i < FRdataForMonth_unordonized.value.length; i++) {
-      FRdataForMonth.unshift(FRdataForMonth_unordonized.value[i]);
+    var dataForMonth = [];
+    for (let i = 0; i < dataForMonth_unordonized.value.length; i++) {
+      dataForMonth.unshift(dataForMonth_unordonized.value[i]);
     }
-    return FRdataForMonth;
+    return dataForMonth;
   }
 
-  GetCases() {
-    this.NbCaseFR = jsonQuery(
-      "records[*countriesAndTerritories=France].cases",
-      {
+  GetCases(Country) {
+    let NbCase;
+    if (Country === "All") {
+      NbCase = jsonQuery("records[*].cases", {
         data: this.covid_data,
-      }
-    );
-    this.TotalNbCaseFR = 0;
-    for (let i = 0; i < this.NbCaseFR.value.length; i++) {
-      this.TotalNbCaseFR += parseInt(this.NbCaseFR.value[i]);
+      });
+    } else {
+      NbCase = jsonQuery(
+        "records[*countriesAndTerritories=" + Country + "].cases",
+        {
+          data: this.covid_data,
+        }
+      );
     }
-
-    this.NbCaseALL = jsonQuery("records[*].cases", {
-      data: this.covid_data,
-    });
-    this.TotalNbCaseALL = 0;
-    for (let i = 0; i < this.NbCaseALL.value.length; i++) {
-      this.TotalNbCaseALL += parseInt(this.NbCaseALL.value[i]);
+    let TotalNbCase = 0;
+    for (let i = 0; i < NbCase.value.length; i++) {
+      TotalNbCase += parseInt(NbCase.value[i]);
     }
+    return TotalNbCase;
   }
 
-  GetDeath() {
-    this.NbDeathFR = jsonQuery(
-      "records[*countriesAndTerritories=France].deaths",
-      {
+  GetDeath(Country) {
+    let NbDeath;
+    if (Country === "All") {
+      NbDeath = jsonQuery("records[*].deaths", {
         data: this.covid_data,
-      }
-    );
-    this.TotalNbDeathFR = 0;
-    for (let i = 0; i < this.NbDeathFR.value.length; i++) {
-      this.TotalNbDeathFR += parseInt(this.NbDeathFR.value[i]);
+      });
+    } else {
+      NbDeath = jsonQuery(
+        "records[*countriesAndTerritories=" + Country + "].deaths",
+        {
+          data: this.covid_data,
+        }
+      );
     }
-
-    this.NbDeathALL = jsonQuery("records[*].deaths", {
-      data: this.covid_data,
-    });
-    this.TotalNbDeathALL = 0;
-    for (let i = 0; i < this.NbDeathALL.value.length; i++) {
-      this.TotalNbDeathALL += parseInt(this.NbDeathALL.value[i]);
+    let TotalNbDeath = 0;
+    for (let i = 0; i < NbDeath.value.length; i++) {
+      TotalNbDeath += parseInt(NbDeath.value[i]);
     }
+    return TotalNbDeath;
   }
   render() {
-    this.GetCases();
-    this.GetDeath();
-    var Jan_data = this.GetFRCasesFrom(1);
-    var jan_data_date = [];
-    var jan_data_cases = [];
-    for (let i = 0; i < Jan_data.length; i++) {
-      jan_data_date.push(Jan_data[i].dateRep);
-      jan_data_cases.push(Jan_data[i].cases);
-    }
-    var Feb_data = this.GetFRCasesFrom(2);
-    var Feb_data_date = [];
-    var Feb_data_cases = [];
-
-    for (let i = 0; i < Feb_data.length; i++) {
-      Feb_data_date.push(Feb_data[i].dateRep);
-      Feb_data_cases.push(Feb_data[i].cases);
-    }
-    var Mar_data = this.GetFRCasesFrom(3);
-    var Mar_data_date = [];
-    var Mardata_cases = [];
-
-    for (let i = 0; i < Mar_data.length; i++) {
-      Mar_data_date.push(Mar_data[i].dateRep);
-      Mardata_cases.push(Mar_data[i].cases);
-    }
     return (
       <div className="App">
         <div className="App-header">
@@ -110,21 +119,10 @@ class App extends React.Component {
         </div>
 
         <div>
-          <h2>Case of COVID-19 in France between 1/1/2020 and 31/3/2020</h2>
-          <LineChart
-            datalabel={"COVID-19 Cases"}
-            data_date={jan_data_date.concat(Feb_data_date)}
-            data={jan_data_cases.concat(Feb_data_cases)}
-            color_cases={"#cb24f0"}
-            size={[500, 500]}
-          />
-        </div>
-
-        <div>
           <h2>Spread of COVID-19 on March 31, 2020</h2>
           <BarChart
             datalabel={"COVID-19 Cases"}
-            data={[this.TotalNbCaseFR, this.TotalNbCaseALL]}
+            data={[this.GetCases("France"), this.GetCases("All")]}
             color={"#cb24f0"}
             size={[500, 500]}
           />
@@ -134,7 +132,7 @@ class App extends React.Component {
           <h2>Death due to COVID-19 on March 31, 2020</h2>
           <BarChart
             datalabel={"Death from COVID-19"}
-            data={[this.TotalNbDeathFR, this.TotalNbDeathALL]}
+            data={[this.GetDeath("France"), this.GetDeath("All")]}
             color={"#ff0000"}
             size={[500, 500]}
           />
@@ -145,13 +143,37 @@ class App extends React.Component {
           <StackedBarchart
             datalabel={"COVID-19 Cases"}
             data={{
-              TotalNbCaseFR: this.TotalNbCaseFR,
-              TotalNbCaseALL: this.TotalNbCaseALL,
-              TotalNbDeathFR: this.TotalNbDeathFR,
-              TotalNbDeathALL: this.TotalNbDeathALL,
+              TotalNbCaseFR: this.GetCases("France"),
+              TotalNbCaseALL: this.GetCases("All"),
+              TotalNbDeathFR: this.GetDeath("France"),
+              TotalNbDeathALL: this.GetDeath("All"),
             }}
             color_cases={"#cb24f0"}
             color_deaths={"#ff0000"}
+            size={[500, 500]}
+          />
+        </div>
+
+        <div>
+          <h2>Case of COVID-19 in France between 1/1/2020 and 31/3/2020</h2>
+          <LineChart
+            datalabel={"COVID-19 Cases"}
+            data_date={this.GetDateRepBetweenDates("France", 1, 3)}
+            data={this.GetDeathsBetweenDates("France", 1, 3)}
+            color={"#ff0000"}
+            size={[500, 500]}
+          />
+        </div>
+
+        <div>
+          <h2>
+            Death due to COVID-19 in France between 1/1/2020 and 31/3/2020
+          </h2>
+          <LineChart
+            datalabel={"COVID-19 Cases"}
+            data_date={this.GetDateRepBetweenDates("France", 1, 3)}
+            data={this.GetCasesBetweenDates("France", 1, 3)}
+            color={"#cb24f0"}
             size={[500, 500]}
           />
         </div>
