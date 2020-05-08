@@ -8,6 +8,7 @@ import PieChart from "./components/PieChart";
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.country_continent = require("./data/Country-continent.json");
     this.covid_data = require("./data/Covid-19-json.json");
     this.GetCases = this.GetCases.bind(this);
     this.GetDeath = this.GetDeath.bind(this);
@@ -15,6 +16,7 @@ class App extends React.Component {
     this.GetDateRepBetweenDates = this.GetDateRepBetweenDates.bind(this);
     this.GetCasesBetweenDates = this.GetCasesBetweenDates.bind(this);
     this.GetCasesFrom = this.GetCasesFrom.bind(this);
+    this.GetForContinent = this.GetForContinent.bind(this);
   }
 
   GetDateRepBetweenDates(Country, Month1, Month2) {
@@ -69,6 +71,31 @@ class App extends React.Component {
       dataForMonth.unshift(dataForMonth_unordonized.value[i]);
     }
     return dataForMonth;
+  }
+
+  GetForContinent(what, Continent) {
+    let Country_on_continent = jsonQuery(
+      "[*continent=" + Continent + "].country",
+      {
+        data: this.country_continent,
+      }
+    ).value;
+
+    if (what == "cases") {
+      let Total_cases_continent = 0;
+      Country_on_continent.forEach((element) => {
+        Total_cases_continent += this.GetCases(element);
+      });
+      return Total_cases_continent;
+    } else if (what == "deaths") {
+      let Total_cases_continent = 0;
+      Country_on_continent.forEach((element) => {
+        Total_cases_continent += this.GetDeath(element);
+      });
+      return Total_cases_continent;
+    } else {
+      console.error("Unknow 'what' value !");
+    }
   }
 
   GetCases(Country) {
