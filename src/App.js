@@ -81,13 +81,13 @@ class App extends React.Component {
       }
     ).value;
 
-    if (what == "cases") {
+    if (what === "cases") {
       let Total_cases_continent = 0;
       Country_on_continent.forEach((element) => {
         Total_cases_continent += this.GetCases(element);
       });
       return Total_cases_continent;
-    } else if (what == "deaths") {
+    } else if (what === "deaths") {
       let Total_cases_continent = 0;
       Country_on_continent.forEach((element) => {
         Total_cases_continent += this.GetDeath(element);
@@ -147,30 +147,6 @@ class App extends React.Component {
         </div>
 
         <div>
-          <h2>TODO</h2>
-          <PieChart
-            datalabel={"COVID-19 Cases"}
-            data={{
-              Asia: 1,
-              Africa: 2,
-              Europe: 3,
-              South_America: 4,
-              North_America: 5,
-              Oceania: 6,
-            }}
-            color={[
-              "#FC7889",
-              "#9f7a42",
-              "#a3acff",
-              "#f79862",
-              "#fe7d6a",
-              "#66cccc",
-            ]}
-            size={[500, 500]}
-          />
-        </div>
-
-        <div>
           <h2>Spread of COVID-19 on March 31, 2020</h2>
           <BarChart
             datalabel={"COVID-19 Cases"}
@@ -226,6 +202,54 @@ class App extends React.Component {
             data_date={this.GetDateRepBetweenDates("France", 1, 3)}
             data={this.GetCasesBetweenDates("France", 1, 3)}
             color={"#cb24f0"}
+            size={[500, 500]}
+          />
+        </div>
+
+        <div>
+          <h2>Spread of COVID-19 for each continent on 3/31/2020</h2>
+          <PieChart
+            datalabel={"COVID-19 Cases"}
+            data={{
+              Asia: this.GetForContinent("cases", "Asia"),
+              Africa: this.GetForContinent("cases", "Africa"),
+              Europe: this.GetForContinent("cases", "Europe"),
+              South_America: this.GetForContinent("cases", "South America"),
+              North_America: this.GetForContinent("cases", "North America"),
+              Oceania: this.GetForContinent("cases", "Oceania"),
+            }}
+            color={[
+              "#FC7889",
+              "#9f7a42",
+              "#a3acff",
+              "#f79862",
+              "#fe7d6a",
+              "#66cccc",
+            ]}
+            size={[500, 500]}
+          />
+        </div>
+
+        <div>
+          <h2>Death due of COVID-19 for each continent on 3/31/2020</h2>
+          <PieChart
+            datalabel={"COVID-19 Cases"}
+            data={{
+              Asia: this.GetForContinent("deaths", "Asia"),
+              Africa: this.GetForContinent("deaths", "Africa"),
+              Europe: this.GetForContinent("deaths", "Europe"),
+              South_America: this.GetForContinent("deaths", "South America"),
+              North_America: this.GetForContinent("deaths", "North America"),
+              Oceania: this.GetForContinent("deaths", "Oceania"),
+            }}
+            color={[
+              "#FC7889",
+              "#9f7a42",
+              "#a3acff",
+              "#f79862",
+              "#fe7d6a",
+              "#66cccc",
+            ]}
             size={[500, 500]}
           />
         </div>
