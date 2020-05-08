@@ -143,7 +143,11 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className="App-header">
-          <h1>COVID-19 Tracker</h1>
+          <h1>
+            COVID-19{" "}
+            <img id="Covid19-img" src="./logo512.png" alt="Coronavirus image" />{" "}
+            Tracker
+          </h1>
         </div>
 
         <div>
