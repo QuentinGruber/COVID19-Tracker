@@ -143,11 +143,8 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className="App-header">
-          <h1>
-            COVID-19{" "}
-            <img id="Covid19-img" src="./logo512.png" alt="Coronavirus image" />{" "}
-            Tracker
-          </h1>
+          <h1>COVID-19 Tracker</h1>
+          <img id="Covid19-img" src="./logo512.png" alt="Coronavirus" />{" "}
         </div>
 
         <div>
@@ -175,8 +172,8 @@ class App extends React.Component {
           <StackedBarchart
             datalabel={"COVID-19 Cases"}
             data={{
-              TotalNbCaseFR: this.GetCases("France"),
-              TotalNbCaseALL: this.GetCases("All"),
+              TotalNbCaseFR: this.GetCases("France") - this.GetDeath("France"),
+              TotalNbCaseALL: this.GetCases("All") - this.GetDeath("All"),
               TotalNbDeathFR: this.GetDeath("France"),
               TotalNbDeathALL: this.GetDeath("All"),
             }}
@@ -191,8 +188,8 @@ class App extends React.Component {
           <LineChart
             datalabel={"COVID-19 Cases"}
             data_date={this.GetDateRepBetweenDates("France", 1, 3)}
-            data={this.GetDeathsBetweenDates("France", 1, 3)}
-            color={"#ff0000"}
+            data={this.GetCasesBetweenDates("France", 1, 3)}
+            color={"#cb24f0"}
             size={[500, 500]}
           />
         </div>
@@ -202,10 +199,10 @@ class App extends React.Component {
             Death due to COVID-19 in France between 1/1/2020 and 31/3/2020
           </h2>
           <LineChart
-            datalabel={"COVID-19 Cases"}
+            datalabel={"COVID-19 Deaths"}
             data_date={this.GetDateRepBetweenDates("France", 1, 3)}
-            data={this.GetCasesBetweenDates("France", 1, 3)}
-            color={"#cb24f0"}
+            data={this.GetDeathsBetweenDates("France", 1, 3)}
+            color={"#ff0000"}
             size={[500, 500]}
           />
         </div>

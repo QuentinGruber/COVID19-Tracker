@@ -14,14 +14,6 @@ export default class StackedBarchart extends Component {
         labels: ["France", "Worldwide"],
         datasets: [
           {
-            label: "Cases",
-            data: [
-              this.props.data.TotalNbCaseFR,
-              this.props.data.TotalNbCaseALL,
-            ],
-            backgroundColor: this.props.color_cases,
-          },
-          {
             label: "Deaths",
             data: [
               this.props.data.TotalNbDeathFR,
@@ -29,10 +21,21 @@ export default class StackedBarchart extends Component {
             ],
             backgroundColor: this.props.color_deaths,
           },
+          {
+            label: "Cases",
+            data: [
+              this.props.data.TotalNbCaseFR,
+              this.props.data.TotalNbCaseALL,
+            ],
+            backgroundColor: this.props.color_cases,
+          },
         ],
       },
       options: {
-        //Customize chart options
+        scales: {
+          xAxes: [{ stacked: true }],
+          yAxes: [{ stacked: true }],
+        },
       },
     });
   }
