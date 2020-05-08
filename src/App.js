@@ -4,6 +4,7 @@ import StackedBarchart from "./components/StackedBarChart";
 import "./App.css";
 import jsonQuery from "json-query";
 import LineChart from "./components/LineChart";
+import PieChart from "./components/PieChart";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -116,6 +117,30 @@ class App extends React.Component {
       <div className="App">
         <div className="App-header">
           <h1>COVID-19 Tracker</h1>
+        </div>
+
+        <div>
+          <h2>TODO</h2>
+          <PieChart
+            datalabel={"COVID-19 Cases"}
+            data={{
+              Asia: 1,
+              Africa: 2,
+              Europe: 3,
+              South_America: 4,
+              North_America: 5,
+              Oceania: 6,
+            }}
+            color={[
+              "#FC7889",
+              "#9f7a42",
+              "#a3acff",
+              "#f79862",
+              "#fe7d6a",
+              "#66cccc",
+            ]}
+            size={[500, 500]}
+          />
         </div>
 
         <div>
